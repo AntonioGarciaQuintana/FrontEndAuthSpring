@@ -1,0 +1,5 @@
+<div style="cursor:pointer; cursor: hand" (click)="onChangeSorting()">
+    <i class="fa fa-sort-desc" *ngIf="sorter.dir === DESC_DIR" ></i>
+    <i class="fa fa-sort-asc" *ngIf="sorter.dir === ASC_DIR"></i>
+    {{ text }}
+</div>

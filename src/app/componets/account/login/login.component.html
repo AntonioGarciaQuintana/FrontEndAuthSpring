@@ -1,0 +1,116 @@
+<div class="container">
+	<form class="form-horizontal" [formGroup]="accountForm">
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<h2>Bienvenido</h2>
+				<p>Por favor ingrese un correo y una contraeña</p>
+				<hr>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<div class="form-group has-danger">
+					<label class="sr-only" for="email">Correo electrónico</label>
+					<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+						<div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
+						<input type="text" name="email" class="form-control" id="email" placeholder="Ingrese un correo electrónico"
+						 [(ngModel)]="user.username" formControlName="username" (input)="onSearchChange()">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="form-control-feedback">
+					<span class="text-danger align-middle" *ngIf="accountForm.controls.username.errors && (accountForm.controls.username.dirty || accountForm.controls.username.touched)">
+						<i class="fa fa-close"></i> El correo electrónico ingresado es incorrecto
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="sr-only" for="password">Contraseña</label>
+					<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+						<div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
+						<input type="password" name="password" [(ngModel)]="user.password" formControlName="password" class="form-control" id="password" placeholder="Contraseña">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="form-control-feedback">
+					<span class="text-danger align-middle" *ngIf="accountForm.controls.password.errors && (accountForm.controls.password.dirty || accountForm.controls.password.touched)" style="Color: red;">
+						<i class="fa fa-close"></i> La contraseña es requerida
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-top: 1rem">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<button type="submit" class="btn btn-success" (click)="login()" [disabled]="!accountForm.valid"><i class="fa fa-sign-in"></i> Iniciar sesión</button>
+				<button  class="btn btn-primary" (click)="modalUser.show();" ><i class="fa fa-address-book-o"></i> Registrar usuario</button>
+				<p class="error-login" *ngIf="!correctUser">El usuario o la contraseña son incorrectas</p>
+			</div>
+			
+		</div>
+	
+	</form>
+	
+</div>
+
+<div bsModal #modalUser="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 id="dialog-sizes-name1" class="modal-title pull-left">Registrar usuario</h4>
+		  <button type="button" class="close pull-right" (click)="modalUser.hide()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+  
+		  <form [formGroup]="userForm">
+  
+			<div class="row">
+			  <div class="col-6">
+				<div class="form-group">
+				  <label>Nombre Completo</label>
+				  <input type="text" name="name" maxlength="100" class="form-control" formControlName="fullName" placeholder="Nombre completo" />
+				  <span class="text-danger align-middle" *ngIf="userForm.controls.fullName.errors && (userForm.controls.fullName.dirty || userForm.controls.fullName.touched)" style="Color: red;">
+					<i class="fa fa-close"></i> Campo obligatorio
+				</span>
+				</div>
+			  </div>
+			  <div class="col-6">
+				<div class="form-group">
+				  <label>Email</label>
+				  <input type="text" name="username" maxlength="50" class="form-control" formControlName="username" placeholder="Email" />
+				  <span class="text-danger align-middle" *ngIf="userForm.controls.username.errors && (userForm.controls.username.dirty || userForm.controls.username.touched)" style="Color: red;">
+					<i class="fa fa-close"></i> Campo obligatorio
+				</span><br>
+				</div>
+			  </div>
+			</div>
+			<div class="row">
+			  <div class="col-6">
+				<div class="form-group">
+				  <label>Constraseña</label>
+				  <input type="password" maxlength="20" name="name" class="form-control" formControlName="password" placeholder="Password" />
+				  <span class="text-danger align-middle" *ngIf="userForm.controls.password.errors && (userForm.controls.password.dirty || userForm.controls.password.touched)" style="Color: red;">
+					<i class="fa fa-close"></i> Campo obligatorio
+				</span>
+				</div>
+			  </div>
+			</div>
+		  </form>
+		  <div class="col-12" class="text-right">
+			<button class="btn btn-default" (click)="modalUser.hide(); resetFormUser();">Cancelar</button>
+			<button class="btn btn-primary" (click)="modalUser.hide();onSaveUser();resetFormUser();" [disabled]="!userForm.valid">Registrar usuario</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>

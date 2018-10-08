@@ -1,0 +1,126 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="navbar-brand">Bienvenido: {{ userLogin?.fullName }}</div>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item ">
+        <a class="nav-link" style="cursor:pointer; cursor: hand" (click)="modalContact.show()">Registrar usuario</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success my-2 my-sm-0" (click)="closeLogin()"><i class="fa fa-sign-out"></i>Cerrar
+        sesión</button>
+    </form>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Lista de contactos </h1>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">
+          <app-column-sorter text="id" property="id" [eventSorting]="eventSort"></app-column-sorter>
+        </th>
+        <th scope="col">
+          <app-column-sorter text="Nombre" property="name" [eventSorting]="eventSort"></app-column-sorter>
+        </th>
+        <th scope="col">
+          <app-column-sorter text="Edad" property="age" [eventSorting]="eventSort"></app-column-sorter>
+        </th>
+        <th scope="col">NickName</th>
+        <th scope="col">
+          <app-column-sorter text="Númoero telefóno" property="phoneNumber" [eventSorting]="eventSort"></app-column-sorter>
+        </th>
+        <th>Acciones</th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr *ngFor="let data of contactList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalElements }">
+        <td>{{ data.id }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.age }}</td>
+        <td>{{ data.nickName }}</td>
+        <td>{{ data.phoneNumber }}</td>
+        <td>
+          <button (click)="onEdit(data);modalContact.show();" class="btn btn-primary btn-xs" data-title="Editar registro"><span class="fa fa-edit"></span></button>
+          <button (click)="openModal(confirmationModal);idContactSelected = data.id;" class="btn btn-danger btn-xs" data-title="Eliminar"><span class="fa fa-trash"></span></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentPage = $event" previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<div bsModal #modalContact="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{idContactSelected == 0 ? 'Registrar contacto' : 'Actualizar contacto'}}</h4>
+        <button type="button" class="close pull-right" (click)="modalContact.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="contactForm">
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="name" class="form-control" formControlName="name" placeholder="Nombre" />
+                <span class="text-danger align-middle" *ngIf="contactForm.controls.name.errors && (contactForm.controls.name.dirty || contactForm.controls.name.touched)" style="Color: red;">
+                  <i class="fa fa-close"></i> Campo obligatorio
+                </span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>Nickname</label>
+                <input type="text" name="nickname" class="form-control" formControlName="nickName" placeholder="Nickname" />
+                <span class="text-danger align-middle" *ngIf="contactForm.controls.nickName.errors && (contactForm.controls.nickName.dirty || contactForm.controls.nickName.touched)" style="Color: red;">
+                  <i class="fa fa-close"></i> Campo obligatorio
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>Edad</label>
+                <input type="text" maxlength="2" name="name" class="form-control" formControlName="age" placeholder="Edad" />
+                <span class="text-danger align-middle" *ngIf="contactForm.controls.age.errors && (contactForm.controls.age.dirty || contactForm.controls.age.touched)" style="Color: red;">
+                  <i class="fa fa-close"></i> Campo obligatorio
+                </span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>Número telefónico</label>
+                <input type="text" name="phoneNumber" class="form-control" formControlName="phoneNumber" placeholder="Número telefónico" />
+                <span class="text-danger align-middle" *ngIf="contactForm.controls.phoneNumber.errors && (contactForm.controls.phoneNumber.dirty || contactForm.controls.phoneNumber.touched)" style="Color: red;">
+                  <i class="fa fa-close"></i> Campo obligatorio
+                </span>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="col-12" class="text-right">
+          <button class="btn btn-default" (click)="onCancel()">Cancelar</button>
+          <button class="btn btn-primary" (click)="modalContact.hide();onSaveContact(contactForm.form)" [disabled]="!contactForm.valid">{{idContactSelected == 0 ? 'Guardar' : 'Actualizar'}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #confirmationModal>
+  <div class="modal-body text-center">
+    <p>¿Esta seguro que desea eliminar el contacto?</p>
+    <button type="button" class="btn btn-default" (click)="onDeleteContact()" >Si</button>
+    <button type="button" class="btn btn-primary" (click)="cancelDelete()" >No</button>
+  </div>
+</ng-template>
